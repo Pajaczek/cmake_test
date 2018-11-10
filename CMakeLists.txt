@@ -4,6 +4,12 @@ project (Tutorial)
 set (Tutorial_VERSION_MAJOR 1)
 set (Tutorial_VERSION_MINOR 0)
  
+set (PROJECT_SOURCE_DIR "src")
+
+# should we use our own math functions?
+option (USE_MYMATH 
+        "Use tutorial provided math implementation" ON) 
+
 # configure a header file to pass some of the CMake settings
 # to the source code
 configure_file (
@@ -15,5 +21,14 @@ configure_file (
 # so that we will find TutorialConfig.h
 include_directories("${PROJECT_BINARY_DIR}")
  
+# add the MathFunctions library?
+#
+if (USE_MYMATH)
+  include_directories ("include")
+  add_subdirectory ("externals")
+  set (EXTRA_LIBS ${EXTRA_LIBS} MathFunctions)
+endif (USE_MYMATH)
+ 
 # add the executable
-add_executable(Tutorial tutorial.cxx)
+add_executable (Tutorial "src/tutorial.cxx")
+target_link_libraries (Tutorial  ${EXTRA_LIBS})
